@@ -94,23 +94,23 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-passport.deserializeUser((id, done) => {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
-
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 app.set("views", "src/views");
 
 app.get("/", (req, res) => {
-  console.log(req.user);
-  res.render("index");
+  res.render("index", {
+    user: req.user
+  });
 });
 
 app.get("/login", (req, res) => {
   res.render("login");
+});
+
+app.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect("/");
 });
 
 app.post(

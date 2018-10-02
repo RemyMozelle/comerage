@@ -15,19 +15,26 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <nav>
     <div class="nav-wrapper">
-      <a href="#!" class="brand-logo">Logo</a>
+      <a href="#" class="brand-logo">Comérage</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
+        {{#if user}}
+        <li><a href="/logout">Se déconnecter</a></li>
+        {{else}}
         <li><a href="/login">Se connecter</a></li>
-        <li><a href="/signin">Créer un compte</a></li>
+        {{/if}}
       </ul>
     </div>
   </nav>
 
   <ul class="sidenav" id="mobile-demo">
+    {{#if user}}
+    <li><a href="/logout">Se déconnecter</a></li>
+    {{else}}
     <li><a href="/login">Se connecter</a></li>
-    <li><a href="/signin">Créer un compte</a></li>
+    {{/if}}
   </ul>
+
   <div class="container">
     {{{body}}}
   </div>
