@@ -1,11 +1,11 @@
 import express from "express";
 import bodyParser from "body-parser";
 import exphbs from "express-handlebars";
-import passport from "passport";
-import session from "express-session";
-import bCrypt from "bcrypt-nodejs";
 import { config } from "dotenv";
 import createSequelize from "./database/db";
+import passport from "passport";
+import session from "express-session";
+import { Strategy } from "passport-local";
 import { createAccount } from "./controllers/user/createAccount";
 import {
   createArticleModel,
@@ -43,6 +43,91 @@ user.hasMany(article);
 article.hasMany(comment);
 user.hasMany(comment);
 
+const app = express();
+app.use(session({ secret: "cats", resave: true, saveUninitialized: true })); // session secret
+app.use(express.static(__dirname + "/public/"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+const hbs = exphbs.create({
+  layoutsDir: `src/views/layouts`,
+  defaultLayout: "main",
+  extname: "hbs"
+});
+passport.use(
+  "local",
+  new Strategy(
+    {
+      usernameField: "email",
+      passwordField: "password"
+    },
+    async function(email, password, done) {
+      try {
+        const authorizedUser = await user.findOne({ where: { email } });
+        if (!authorizedUser) {
+          return done(null, false, { message: "Incorrect username." });
+        }
+        if (authorizedUser.password !== password) {
+          return done(null, false, { message: "Incorrect password." });
+        }
+        return done(null, authorizedUser);
+      } catch (err) {
+        console.log(err);
+        return done(err, false, { message: "Incorrect username." });
+      }
+    }
+  )
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const authorizedUser = await user.findById(id);
+    done(null, authorizedUser);
+  } catch (err) {
+    done(err);
+  }
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+app.engine("hbs", hbs.engine);
+app.set("view engine", "hbs");
+app.set("views", "src/views");
+
+app.get("/", (req, res) => {
+  console.log(req.user);
+  res.render("index");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login"
+  })
+);
+
+app.get("/signin", (req, res) => {
+  res.render("signin");
+});
+app.post("/signin", createAccount(user));
+
+// server : 3000
+app.listen(3000);
 /* user.sync();
 category.sync();
 article.sync();
@@ -54,44 +139,3 @@ article_has_category.drop();
 article.drop();
 category.drop();
 user.drop(); */
-
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public/"));
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: true,
-    saveUninitialized: true
-  })
-); // session secret
-app.use(passport.initialize());
-app.use(passport.session());
-
-const hbs = exphbs.create({
-  layoutsDir: `src/views/layouts`,
-  defaultLayout: "main",
-  extname: "hbs"
-});
-
-app.engine("hbs", hbs.engine);
-app.set("view engine", "hbs");
-app.set("views", "src/views");
-
-app.get("/", (req, res) => {
-  res.render("signin");
-});
-
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-
-app.get("/signin", (req, res) => {
-  res.render("signin");
-});
-
-app.post("/signin", createAccount(user));
-
-// server : 3000
-app.listen(3000);
