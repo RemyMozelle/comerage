@@ -6,7 +6,6 @@ import createSequelize from "./database/db";
 import passport from "passport";
 import session from "express-session";
 import { Strategy } from "passport-local";
-import { createAccount } from "./controllers/user/createAccount";
 import {
   createArticleModel,
   createArticleHasCategoryModel,
@@ -14,6 +13,9 @@ import {
   createUserModel,
   createCategoryModel
 } from "./models";
+import { createStrategy } from "./passport/strategy";
+import { authRouter, homeRouter } from "./routes";
+import createUserRouter from "./routes/user/createUserRouter";
 // dotenv : config
 config();
 
@@ -50,36 +52,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(authRouter);
+app.use(homeRouter);
+app.use(createUserRouter(user));
+passport.use("local", createStrategy(Strategy, user));
 
 const hbs = exphbs.create({
   layoutsDir: `src/views/layouts`,
   defaultLayout: "main",
   extname: "hbs"
 });
-passport.use(
-  "local",
-  new Strategy(
-    {
-      usernameField: "email",
-      passwordField: "password"
-    },
-    async function(email, password, done) {
-      try {
-        const authorizedUser = await user.findOne({ where: { email } });
-        if (!authorizedUser) {
-          return done(null, false, { message: "Incorrect username." });
-        }
-        if (authorizedUser.password !== password) {
-          return done(null, false, { message: "Incorrect password." });
-        }
-        return done(null, authorizedUser);
-      } catch (err) {
-        console.log(err);
-        return done(err, false, { message: "Incorrect username." });
-      }
-    }
-  )
-);
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -98,44 +80,5 @@ app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 app.set("views", "src/views");
 
-app.get("/", (req, res) => {
-  res.render("index", {
-    user: req.user
-  });
-});
-
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-
-app.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect("/");
-});
-
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login"
-  })
-);
-
-app.get("/signin", (req, res) => {
-  res.render("signin");
-});
-app.post("/signin", createAccount(user));
-
 // server : 3000
 app.listen(3000);
-/* user.sync();
-category.sync();
-article.sync();
-article_has_category.sync();
-comment.sync(); */
-
-/* comment.drop();
-article_has_category.drop();
-article.drop();
-category.drop();
-user.drop(); */
