@@ -1,0 +1,29 @@
+<div class="row">
+  <h2 class="col s12 m6 offset-m3">Comerage</h2>
+  <form method="POST" class="col s12">
+    <ul>
+      {{#each err}}
+      <li class="red-text text-darken-2 col s12 m6 offset-m3">{{message}}</li>
+      {{/each}}
+    </ul>
+    <div class="row">
+      <div class="input-field col s12 m6 offset-m3">
+        <input id="text" type="text" class="validate" name="nickname">
+        <label for="pseudo">Pseudo</label>
+      </div>
+      <div class="input-field col s12 m6 offset-m3">
+        <input id="email" type="email" class="validate" name="email">
+        <label for="email">Email</label>
+      </div>
+      <div class="input-field col s12 m6 offset-m3">
+        <input id="password" type="password" class="validate" name="password">
+        <label for="password">Mot de passe</label>
+      </div>
+    </div>
+    <div class="input-field col s12 m6 offset-m3">
+      <button class="btn waves-effect waves-light" type="submit">Créer
+        <i class="material-icons right">send</i>
+      </button>
+    </div>
+  </form>
+</div>
