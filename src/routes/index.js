@@ -1,4 +1,5 @@
-import authRouter from "./auth/authRouter";
+import createAuthRouter from "./auth/createAuthRouter";
 import homeRouter from "./home/homeRouter";
+import createUserRouter from "./user/createUserRouter";
 
-export { authRouter, homeRouter };
+export { createAuthRouter, homeRouter, createUserRouter };

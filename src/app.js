@@ -14,8 +14,7 @@ import {
   createCategoryModel
 } from "./models";
 import { createStrategy } from "./passport/strategy";
-import { authRouter, homeRouter } from "./routes";
-import createUserRouter from "./routes/user/createUserRouter";
+import { createAuthRouter, homeRouter, createUserRouter } from "./routes";
 // dotenv : config
 config();
 
@@ -52,7 +51,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(authRouter);
+app.use(createAuthRouter(passport, user));
 app.use(homeRouter);
 app.use(createUserRouter(user));
 passport.use("local", createStrategy(Strategy, user));
@@ -61,19 +60,6 @@ const hbs = exphbs.create({
   layoutsDir: `src/views/layouts`,
   defaultLayout: "main",
   extname: "hbs"
-});
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const authorizedUser = await user.findById(id);
-    done(null, authorizedUser);
-  } catch (err) {
-    done(err);
-  }
 });
 
 app.engine("hbs", hbs.engine);
