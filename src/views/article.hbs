@@ -1,36 +1,48 @@
+<h5>Bonjour {{user.nickname}}</h5>
 <div class="row">
-  <h2 class="col s12 m6 offset-m3">Création d'un article</h2>
-  <form method="POST" class="col s12">
-    <div class="row">
+  <div class="col s8 offset-s2 m8 offset-m2">
+    <div class="card horizontal">
+      <div>
+        <a class="btn-floating halfway-fab waves-effect waves-right blue" style="right: 0; left:-45px; top:10px;"><i
+            class="material-icons">create</i></a>
+        <a class="btn-floating halfway-fab waves-effect waves-left red" style="right: 0; left:-45px; bottom:10px;"><i
+            class="material-icons">delete</i></a>
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+          {{#if article}}
+          <p>{{article.body}}</p>
+          {{else}}
+          <p>aucun article a été trouver</p>
+          {{/if }}
+        </div>
+        <div class="card-action">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-      <div class="input-field col s12 m6 offset-m3">
-        {{#each categories}}
-        <p>
-          <label>
-            <input type="checkbox" value={{id}} name="categories" />
-            <span>{{name}}</span>
-          </label>
-        </p>
-        {{/each}}
-      </div>
-
-      <div class="input-field col s12 m6 offset-m3">
-        <textarea id="body" class="materialize-textarea" name="body"></textarea>
-        <label for="body">Corps</label>
-      </div>
-      <div class="input-field col s12 m6 offset-m3">
-        <p>
-          <label>
-            <input type="checkbox" name="publish" />
-            <span>publier</span>
-          </label>
-        </p>
-      </div>
+<h4 class="col s12 m6 offset-m3">Poster un commentaire</h4>
+<form method="POST" class="col s12">
+  <div class="row">
+    <div class="input-field col s12 m6 offset-m3">
+      <textarea id="body" class="materialize-textarea" name="body"></textarea>
+      <label for="body">Corps</label>
     </div>
     <div class="input-field col s12 m6 offset-m3">
-      <button class="btn waves-effect waves-light" type="submit">Créer
-        <i class="material-icons right">send</i>
-      </button>
+      <p>
+        <label>
+          <input type="checkbox" name="publish" />
+          <span>publier</span>
+        </label>
+      </p>
     </div>
-  </form>
+  </div>
+  <div class="input-field col s12 m6 offset-m3">
+    <button class="btn waves-effect waves-light" type="submit">Créer
+      <i class="material-icons right">send</i>
+    </button>
+  </div>
+</form>
 </div>

@@ -1,0 +1,36 @@
+<div class="row">
+  <h2 class="col s12 m6 offset-m3">Modfier un article</h2>
+  <form method="POST" class="col s12">
+    <div class="row">
+      <div class="input-field col s12 m6 offset-m3">
+        {{#each categories}}
+        <p>
+          <label>
+            <input type="checkbox" value={{id}} name="categories" />
+            <span>{{name}}</span>
+          </label>
+        </p>
+        {{/each}}
+
+      </div>
+      <div class="input-field col s12 m6 offset-m3">
+        <textarea id="body" class="materialize-textarea" name="body">{{article.body}}</textarea>
+        <label for="body">Corps</label>
+      </div>
+      <div class="input-field col s12 m6 offset-m3">
+        <p>
+          <label>
+            <input type="checkbox" name="publish" />
+            <span>publier</span>
+          </label>
+        </p>
+      </div>
+    </div>
+    <div class="input-field col s12 m6 offset-m3">
+      <button class="btn waves-effect waves-light" type="submit">Modifier
+        <i class="material-icons right">send</i>
+      </button>
+    </div>
+  </form>
+</div>
+{{errors}}

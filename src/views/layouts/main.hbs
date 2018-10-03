@@ -5,14 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <title>Document</title>
 </head>
 
 <body>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <nav>
     <div class="nav-wrapper">
@@ -20,7 +19,7 @@
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
         {{#if user}}
-        <li><a href="/article">Créer un article</a></li>
+        <li><a href="/articles">Créer un article</a></li>
         <li><a href="/logout">Se déconnecter</a></li>
         {{else}}
         <li><a href="/login">Se connecter</a></li>
@@ -31,7 +30,7 @@
 
   <ul class="sidenav" id="mobile-demo">
     {{#if user}}
-    <li><a href="/article">Créer un article</a></li>
+    <li><a href="/articles">Créer un article</a></li>
     <li><a href="/logout">Se déconnecter</a></li>
     {{else}}
     <li><a href="/login">Se connecter</a></li>
@@ -42,12 +41,7 @@
     {{{body}}}
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const elems = document.querySelectorAll(".sidenav");
-      const instances = M.Sidenav.init(elems);
-    });
-  </script>
+  <script src="/js/sidenav.js"></script>
 </body>
 
 </html>

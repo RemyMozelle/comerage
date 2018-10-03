@@ -6,11 +6,11 @@ const createArticleRouter = (article, category, article_has_category) => {
   const articleController = new ArticleController();
   //routes
   articleRouter.get(
-    "/article",
+    "/articles",
     articleController.showArticleWithCategory(article, category)
   );
   articleRouter.post(
-    "/article",
+    "/articles",
     articleController.createArticleWithCategory(
       article,
       article_has_category,
@@ -21,6 +21,24 @@ const createArticleRouter = (article, category, article_has_category) => {
     "/",
     articleController.showAllArticles(article, category, article_has_category)
   );
+  articleRouter.get("/articles/:id", articleController.showOneArticle(article));
+  articleRouter.get(
+    "/edit/articles/:id",
+    articleController.showOneArticleEdit(
+      article,
+      category,
+      article_has_category
+    )
+  );
+  articleRouter.post(
+    "/edit/articles/:id_article",
+    articleController.editOneArticle(article, article_has_category)
+  );
+  articleRouter.post(
+    "/del/articles/:id",
+    articleController.deleteArticle(article)
+  );
+
   return articleRouter;
 };
 

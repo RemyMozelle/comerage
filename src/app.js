@@ -68,7 +68,7 @@ user.hasMany(comment);
 // Server
 const app = express();
 app.use(session({ secret: "cats", resave: true, saveUninitialized: true })); // session secret
-app.use(express.static("../public"));
+app.use(express.static("./public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
@@ -82,7 +82,21 @@ passport.use("local", createStrategy(Strategy, user));
 const hbs = exphbs.create({
   layoutsDir: `src/views/layouts`,
   defaultLayout: "main",
-  extname: "hbs"
+  extname: "hbs",
+  helpers: {
+    ifCond: function(v1, v2, options) {
+      if (v1 === v2) {
+        return options.fn(this);
+      }
+      return options.inverse(this);
+    },
+    setVar: function(varName, varValue, options) {
+      if (!options.data.root) {
+        options.data.root = {};
+      }
+      options.data.root[varName] = varValue;
+    }
+  }
 });
 
 app.engine("hbs", hbs.engine);
