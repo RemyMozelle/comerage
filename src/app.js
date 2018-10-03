@@ -15,6 +15,8 @@ import {
 } from "./models";
 import { createStrategy } from "./passport/strategy";
 import { createAuthRouter, homeRouter, createUserRouter } from "./routes";
+import { createCategory } from "./database/bulk/createCategory";
+import createArticleRouter from "./routes/article/createArticleRouter";
 // dotenv : config
 config();
 
@@ -43,17 +45,38 @@ article_has_category.belongsTo(category);
 user.hasMany(article);
 article.hasMany(comment);
 user.hasMany(comment);
-
+// BULK
+// -------------
+// createCategory(category);
+// -------------
+// CREATE TABLES
+// -------------
+// article.sync();
+// category.sync();
+// article_has_category.sync();
+// user.sync();
+// comment.sync();
+// -------------
+// DROP TABLES
+// -------------
+// article.drop();
+// category.drop();
+// article_has_category.drop();
+// user.drop();
+// comment.drop();
+// -------------
+// Server
 const app = express();
 app.use(session({ secret: "cats", resave: true, saveUninitialized: true })); // session secret
-app.use(express.static(__dirname + "/public/"));
+app.use(express.static("../public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(createAuthRouter(passport, user));
 app.use(homeRouter);
+app.use(createAuthRouter(passport, user));
 app.use(createUserRouter(user));
+app.use(createArticleRouter(article, category, article_has_category));
 passport.use("local", createStrategy(Strategy, user));
 
 const hbs = exphbs.create({

@@ -3,11 +3,11 @@ import AuthController from "../../controllers/auth/AuthController";
 
 const createAuthRouter = (passport, user) => {
   const authRouter = Router();
+  const authController = new AuthController();
   //routes
-  authRouter.get("/login", AuthController.login());
-  authRouter.get("/logout", AuthController.logout());
-  authRouter.get("/signin", AuthController.signin());
-
+  authRouter.get("/login", authController.login());
+  authRouter.get("/logout", authController.logout());
+  authRouter.get("/signin", authController.signin());
   authRouter.post(
     "/login",
     passport.authenticate("local", {

@@ -3,10 +3,9 @@ import UserController from "../../controllers/user/UserController";
 
 const createUserRouter = user => {
   const userRouter = Router();
-  const userController = new UserController(user);
-  console.log(UserController);
+  const userController = new UserController();
   //routes
-  userRouter.post("/signin", userController.createAccount());
+  userRouter.post("/signin", userController.createAccount(user));
 
   return userRouter;
 };
