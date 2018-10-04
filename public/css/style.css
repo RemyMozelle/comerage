@@ -1,6 +1,21 @@
 .btn-floating.halfway-fab {
   position: absolute;
+  display: flex;
   right: 0;
   bottom: 70px;
   left: -20px;
+}
+
+.edit-button {
+  position: absolute;
+  bottom: -20px !important;
+  left: 20px !important;
+  background-color: #26a69a !important;
+}
+
+.delete-button {
+  position: absolute;
+  bottom: -20px !important;
+  left: 70px !important;
+  background-color: #ee6e73 !important;
 }

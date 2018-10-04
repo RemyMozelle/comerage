@@ -1,17 +1,15 @@
 {{setVar "userId" user.id}}
-{{log userId}}
 {{#if user}}
 <div class="col s8 offset-s2 m8 offset-m2">
   <h5>Bonjour {{user.nickname}}</h5>
   {{#each articles}}
   <div class="card horizontal">
-    {{log userId}}
-    {{#ifCond userId user_id}}
-    <div>
-      <a href="/edit/articles/{{id}}" class="btn-floating halfway-fab waves-effect waves-right blue" style="right: 0; left:-45px; top:10px;"><i
+    {{#ifCond ../userId user_id}}
+    <div class="wrapp-btn">
+      <a href="/edit/articles/{{id}}" class="btn-floating halfway-fab waves-effect waves-left blue edit-button"><i
           class="material-icons">create</i></a>
       <form method="post" action="/del/articles/{{id}}">
-        <button class="btn-floating halfway-fab waves-effect waves-left red" style="right: 0; left:-45px; bottom:10px;">
+        <button class="btn-floating halfway-fab waves-effect waves-left red delete-button">
           <i class="material-icons">delete</i></a>
         </button>
       </form>
@@ -23,9 +21,9 @@
       </div>
       <div class="card-action">
         <ul>
-          <li><a href="/articles/{{id}}">Voir l'article</a></li>
+          <a href="/articles/{{id}}">Voir l'article</a>
           {{#each article_has_categories}}
-          <span class="badge new badge red" data-badge-caption="">{{category.name}}</span>
+          <span class=" badge new badge" data-badge-caption="">{{category.name}}</span>
           {{/each}}
         </ul>
       </div>
