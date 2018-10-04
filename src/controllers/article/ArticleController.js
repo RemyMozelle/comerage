@@ -8,54 +8,55 @@ class ArticleController {
 
     this.showAllArticles = this.showAllArticles.bind(this);
     this.showOneArticle = this.showOneArticle.bind(this);
+    this.showArticleWithCategory = this.showArticleWithCategory.bind(this);
+    this.createArticleWithCategory = this.createArticleWithCategory.bind(this);
   }
 
-  /* async showArticleWithCategory(req, res) {
-    const categories = await this.categories.findAll();
+  // afficher le formulaire d'une création d'article
+  async showArticleWithCategory(req, res) {
+    const categories = await this.category.findAll();
     res.render("articles", {
       categories
     });
-  } */
-
-  createArticleWithCategory(Article, Article_has_category) {
-    return async (req, res) => {
-      const { id } = req.user;
-      const { body, categories, publish } = req.body;
-      console.log(req.body);
-      // to do TRANSACTION SEQUELIZE
-      if (publish) {
-        const article = await Article.create({
-          body,
-          publish: 1,
-          created_at: new Date(),
-          user_id: id
-        });
-
-        for (let i = 0; i < categories.length; i++) {
-          await Article_has_category.create({
-            category_id: categories[i],
-            article_id: article.id
-          });
-        }
-        res.redirect("/");
-      } else {
-        const article = await Article.create({
-          body,
-          publish: 0,
-          created_at: new Date(),
-          user_id: id
-        });
-        for (let i = 0; i < categories.length; i++) {
-          await Article_has_category.create({
-            category_id: categories[i],
-            article_id: article.id
-          });
-        }
-        res.redirect("/");
-      }
-    };
   }
+  // créer un article avec les catégories
+  async createArticleWithCategory(req, res) {
+    const { id } = req.user;
+    const { body, categories, publish } = req.body;
+    console.log(req.body);
+    // to do TRANSACTION SEQUELIZE
+    if (publish) {
+      const article = await this.article.create({
+        body,
+        publish: 1,
+        created_at: new Date(),
+        user_id: id
+      });
 
+      for (let i = 0; i < categories.length; i++) {
+        await this.article_has_categories.create({
+          category_id: categories[i],
+          article_id: article.id
+        });
+      }
+      res.redirect("/");
+    } else {
+      const article = await this.article.create({
+        body,
+        publish: 0,
+        created_at: new Date(),
+        user_id: id
+      });
+      for (let i = 0; i < categories.length; i++) {
+        await this.article_has_categories.create({
+          category_id: categories[i],
+          article_id: article.id
+        });
+      }
+      res.redirect("/");
+    }
+  }
+  // afficher tous les articles avec leurs catégories
   async showAllArticles(req, res) {
     const articles = await this.article.findAll({
       attributes: ["id", "body", "user_id"],
@@ -78,7 +79,7 @@ class ArticleController {
       user: req.user
     });
   }
-  // JE SUIS ICI
+  // afficher uniquement un article qui a été selectionner avec les commentaires
   async showOneArticle(req, res) {
     const article = await this.article.findOne({
       where: {

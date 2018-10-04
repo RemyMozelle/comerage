@@ -19,8 +19,8 @@ const createArticleRouter = (
   //routes
   articleRouter.get("/", articleController.showAllArticles);
   articleRouter.get("/articles/:id", articleController.showOneArticle);
-  // articleRouter.get("/articles", articleController.showArticleWithCategory);
-  // articleRouter.post("/articles", articleController.createArticleWithCategory);
+  articleRouter.get("/articles", articleController.showArticleWithCategory);
+  articleRouter.post("/articles", articleController.createArticleWithCategory);
   // articleRouter.get("/edit/articles/:id", articleController.showOneArticleEdit);
   // articleRouter.post(
   //   "/edit/articles/:id_article",
