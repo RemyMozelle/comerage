@@ -72,7 +72,7 @@ class ArticleController {
     };
   }
   // JE SUIS ICI
-  showOneArticle(Article, User) {
+  showOneArticle(Article, User, Comments) {
     return async (req, res) => {
       const article = await Article.findOne({
         where: {
@@ -84,10 +84,17 @@ class ArticleController {
           id: article.user_id
         }
       });
+
+      const comment = await Comments.findAll({
+        where: {
+          article_id: article.id
+        }
+      });
       res.render("article", {
         article,
         nickname: userName.nickname,
-        user: req.user
+        user: req.user,
+        comment
       });
     };
   }

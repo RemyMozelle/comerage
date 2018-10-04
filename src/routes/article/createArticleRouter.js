@@ -1,14 +1,20 @@
 import { Router } from "express";
 import ArticleController from "../../controllers/article/ArticleController";
 
-const createArticleRouter = (article, category, article_has_category, user) => {
+const createArticleRouter = (
+  article,
+  category,
+  article_has_category,
+  user,
+  comment
+) => {
   const articleRouter = Router();
   const articleController = new ArticleController();
   //routes
-  articleRouter.get(
+  /* articleRouter.get(
     "/articles",
     articleController.showArticleWithCategory(article, category)
-  );
+  ); */
   articleRouter.post(
     "/articles",
     articleController.createArticleWithCategory(
@@ -23,7 +29,7 @@ const createArticleRouter = (article, category, article_has_category, user) => {
   );
   articleRouter.get(
     "/articles/:id",
-    articleController.showOneArticle(article, user)
+    articleController.showOneArticle(article, user, comment)
   );
   articleRouter.get(
     "/edit/articles/:id",

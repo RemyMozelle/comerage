@@ -14,7 +14,12 @@ import {
   createCategoryModel
 } from "./models";
 import { createStrategy } from "./passport/strategy";
-import { createAuthRouter, homeRouter, createUserRouter } from "./routes";
+import {
+  createAuthRouter,
+  homeRouter,
+  createUserRouter,
+  createCommentRouter
+} from "./routes";
 import { createCategory } from "./database/bulk/createCategory";
 import createArticleRouter from "./routes/article/createArticleRouter";
 // dotenv : config
@@ -76,7 +81,10 @@ app.use(passport.session());
 app.use(homeRouter);
 app.use(createAuthRouter(passport, user));
 app.use(createUserRouter(user));
-app.use(createArticleRouter(article, category, article_has_category, user));
+app.use(
+  createArticleRouter(article, category, article_has_category, user, comment)
+);
+app.use(createCommentRouter(comment, article, user));
 passport.use("local", createStrategy(Strategy, user));
 
 const hbs = exphbs.create({

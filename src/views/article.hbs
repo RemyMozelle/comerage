@@ -20,23 +20,17 @@
 <div class="row">
   <div class="col s12">
     <h4>Poster un commentaire</h4>
-    <form method="POST" class="col s12">
+    <form method="POST" action="/comments" class="col s12">
+      <input type="hidden" name="user_id" value={{user.id}}>
+      <input type="hidden" name="article_id" value={{article.id}}>
       <div class="row">
         <div class="input-field col s12">
           <textarea id="body" class="materialize-textarea" name="body"></textarea>
           <label for="body">Corps</label>
         </div>
-        <div class="input-field col s12">
-          <p>
-            <label>
-              <input type="checkbox" name="publish" />
-              <span>publier</span>
-            </label>
-          </p>
-        </div>
       </div>
       <div class="input-field col s12 ">
-        <button class="btn waves-effect waves-light" type="submit">Créer
+        <button class="btn waves-effect waves-light" type="submit">Commenter
           <i class="material-icons right">send</i>
         </button>
       </div>
@@ -61,3 +55,5 @@
     </ul>
   </div>
 </div>
+
+{{log comment}}
