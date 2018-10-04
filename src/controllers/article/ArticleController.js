@@ -10,6 +10,9 @@ class ArticleController {
     this.showOneArticle = this.showOneArticle.bind(this);
     this.showArticleWithCategory = this.showArticleWithCategory.bind(this);
     this.createArticleWithCategory = this.createArticleWithCategory.bind(this);
+    this.showArticleEdit = this.showArticleEdit.bind(this);
+    this.editArticle = this.editArticle.bind(this);
+    this.deleteArticle = this.deleteArticle.bind(this);
   }
 
   // afficher le formulaire d'une création d'article
@@ -119,121 +122,115 @@ class ArticleController {
       userComment
     });
   }
+  // afficher l'article qui voudra être modifier
+  async showArticleEdit(req, res) {
+    const article = await this.article.findById(req.params.id);
+    const categories = await this.category.findAll();
+    const article_has_categories = await this.article_has_categories.findAll({
+      where: {
+        article_id: article.id
+      },
+      include: [
+        {
+          model: this.category
+        }
+      ]
+    });
 
-  showOneArticleEdit(Article, Category, Article_has_category) {
-    return async (req, res) => {
-      const article = await Article.findById(req.params.id);
-      const categories = await Category.findAll();
-      const article_has_categories = await Article_has_category.findAll({
-        where: {
-          article_id: article.id
-        },
-        include: [
+    res.render("editArticle", {
+      article,
+      user: req.user,
+      categories,
+      article_has_categories
+    });
+  }
+
+  async editArticle(req, res) {
+    const { body, categories, publish } = req.body;
+
+    if (!categories) {
+      res.redirect(`/edit/articles/${req.params.id_article}`);
+    }
+
+    if (typeof req.user.id === undefined) {
+      res.redirect(`/login`);
+    }
+
+    if (publish) {
+      try {
+        await this.article_has_categories.destroy({
+          where: {
+            article_id: req.params.id_article
+          }
+        });
+
+        await this.article.update(
           {
-            model: Category
+            body,
+            publish: 1,
+            user_id: req.user.id
+          },
+          {
+            where: {
+              id: req.params.id_article
+            }
           }
-        ]
-      });
+        );
+        // to do TRANSACTION SEQUELIZE
+        for (let i = 0; i < categories.length; i++) {
+          await this.article_has_categories.create({
+            category_id: categories[i],
+            article_id: req.params.id_article
+          });
+        }
 
-      res.render("editArticle", {
-        article,
-        user: req.user,
-        categories,
-        article_has_categories
-      });
-    };
+        res.redirect("/");
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      try {
+        await this.article.update(
+          {
+            body,
+            publish: 0,
+            user_id: req.user.id
+          },
+          {
+            where: {
+              id: req.params.id_article
+            }
+          }
+        );
+        // to do TRANSACTION SEQUELIZE
+        for (let i = 0; i < categories.length; i++) {
+          await this.article_has_categories.create({
+            category_id: categories[i],
+            article_id: req.params.id_article
+          });
+        }
+        res.redirect("/");
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 
-  editOneArticle(Article, Article_has_category) {
-    // to do verif user
-    return async (req, res) => {
-      const { body, categories, publish } = req.body;
+  async deleteArticle(req, res) {
+    const { id } = req.params;
 
-      if (!categories) {
-        res.redirect(`/edit/articles/${req.params.id_article}`);
-      }
-
-      if (typeof req.user.id === undefined) {
-        res.redirect(`/login`);
-      }
-      if (publish) {
-        try {
-          await Article_has_category.destroy({
-            where: {
-              article_id: req.params.id_article
-            }
-          });
-
-          await Article.update(
-            {
-              body,
-              publish: 1,
-              user_id: req.user.id
-            },
-            {
-              where: {
-                id: req.params.id_article
-              }
-            }
-          );
-          // to do TRANSACTION SEQUELIZE
-          for (let i = 0; i < categories.length; i++) {
-            await Article_has_category.create({
-              category_id: categories[i],
-              article_id: req.params.id_article
-            });
+    if (req.user) {
+      try {
+        await this.article.destroy({
+          where: {
+            id
           }
-
-          res.redirect("/");
-        } catch (err) {
-          console.error(err);
-        }
-      } else {
-        try {
-          await Article.update(
-            {
-              body,
-              publish: 0,
-              user_id: id
-            },
-            {
-              where: {
-                id: req.params.id_article
-              }
-            }
-          );
-          // to do TRANSACTION SEQUELIZE
-          for (let i = 0; i < categories.length; i++) {
-            await Article_has_category.create({
-              category_id: categories[i],
-              article_id: req.params.id_article
-            });
-          }
-          res.redirect("/");
-        } catch (err) {
-          console.error(err);
-        }
+        });
+        res.redirect("/");
+      } catch (err) {
+        console.error(err);
       }
-    };
-  }
-
-  deleteArticle(Article) {
-    return async (req, res) => {
-      const { id } = req.params;
-
-      if (req.user) {
-        try {
-          await Article.destroy({
-            where: {
-              id
-            }
-          });
-          res.redirect("/");
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    };
+    }
   }
 }
 export default ArticleController;

@@ -21,12 +21,12 @@ const createArticleRouter = (
   articleRouter.get("/articles/:id", articleController.showOneArticle);
   articleRouter.get("/articles", articleController.showArticleWithCategory);
   articleRouter.post("/articles", articleController.createArticleWithCategory);
-  // articleRouter.get("/edit/articles/:id", articleController.showOneArticleEdit);
-  // articleRouter.post(
-  //   "/edit/articles/:id_article",
-  //   articleController.editOneArticle
-  // );
-  // articleRouter.post("/del/articles/:id", articleController.deleteArticle);
+  articleRouter.post("/del/articles/:id", articleController.deleteArticle);
+  articleRouter.get("/edit/articles/:id", articleController.showArticleEdit);
+  articleRouter.post(
+    "/edit/articles/:id_article",
+    articleController.editArticle
+  );
 
   return articleRouter;
 };
