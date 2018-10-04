@@ -60,27 +60,60 @@ class ArticleController {
     }
   }
   // afficher tous les articles avec leurs catégories
+  // filtre aussi tous les articles par catégories !
   async showAllArticles(req, res) {
-    const articles = await this.article.findAll({
-      attributes: ["id", "body", "user_id"],
-      where: {
-        publish: 1
-      },
-      include: [
-        {
-          model: this.article_has_categories,
-          include: [
-            {
-              model: this.category
-            }
-          ]
-        }
-      ]
-    });
-    res.render("home", {
-      articles,
-      user: req.user
-    });
+    if (Object.keys(req.query).length === 0) {
+      const articles = await this.article.findAll({
+        attributes: ["id", "body", "user_id"],
+        where: {
+          publish: 1
+        },
+        include: [
+          {
+            model: this.article_has_categories,
+            include: [
+              {
+                model: this.category
+              }
+            ]
+          }
+        ]
+      });
+
+      const categories = await this.category.findAll();
+      res.render("home", {
+        articles,
+        user: req.user,
+        categories
+      });
+    } else {
+      const articles = await this.article.findAll({
+        attributes: ["id", "body", "user_id"],
+        where: {
+          publish: 1
+        },
+        include: [
+          {
+            model: this.article_has_categories,
+            where: {
+              category_id: req.query.category
+            },
+            include: [
+              {
+                model: this.category
+              }
+            ]
+          }
+        ]
+      });
+
+      const categories = await this.category.findAll();
+      res.render("home", {
+        articles,
+        user: req.user,
+        categories
+      });
+    }
   }
   // afficher uniquement un article qui a été selectionner avec les commentaires
   async showOneArticle(req, res) {

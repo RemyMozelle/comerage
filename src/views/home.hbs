@@ -1,4 +1,28 @@
 {{setVar "userId" user.id}}
+
+<div class="input-field col s12 m6 offset-m3">
+  <form method="GET">
+    {{#each categories}}
+    <p>
+      <label>
+        <input type="checkbox" value={{id}} name="category" />
+        <span>{{name}}</span>
+      </label>
+    </p>
+    {{/each}}
+    <button type="submit">filtrer</button>
+  </form>
+</div>
+
+
+
+
+
+
+
+
+
+
 {{#if user}}
 <div class="col s8 offset-s2 m8 offset-m2">
   <h5>Bonjour {{user.nickname}}</h5>
@@ -51,7 +75,7 @@
   {{/if}}
 
 
-  <div class="row">
+  {{!-- <div class="row">
     <div class="col s12">
       <ul class="tabs">
         <li class="tab col s3"><a href="#test1">Test 1</a></li>
@@ -64,4 +88,4 @@
     <div id="test2" class="col s12">Test 2</div>
     <div id="test3" class="col s12">Test 3</div>
     <div id="test4" class="col s12">Test 4</div>
-  </div>
+  </div> --}}
