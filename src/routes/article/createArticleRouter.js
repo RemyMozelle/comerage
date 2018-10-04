@@ -12,15 +12,15 @@ const createArticleRouter = (
   const articleController = new ArticleController(
     article,
     category,
-    article_has_category,
-    comment
+    user,
+    comment,
+    article_has_category
   );
-  console.log(article);
   //routes
   articleRouter.get("/", articleController.showAllArticles);
+  articleRouter.get("/articles/:id", articleController.showOneArticle);
   // articleRouter.get("/articles", articleController.showArticleWithCategory);
   // articleRouter.post("/articles", articleController.createArticleWithCategory);
-  // articleRouter.get("/articles/:id", articleController.showOneArticle);
   // articleRouter.get("/edit/articles/:id", articleController.showOneArticleEdit);
   // articleRouter.post(
   //   "/edit/articles/:id_article",

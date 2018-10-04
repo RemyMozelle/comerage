@@ -1,11 +1,13 @@
 class ArticleController {
-  constructor(article, category, article_has_categories, comment) {
+  constructor(article, category, user, comment, article_has_categories) {
     this.article = article;
     this.category = category;
-    this.article_has_categories = article_has_categories;
+    this.user = user;
     this.comment = comment;
+    this.article_has_categories = article_has_categories;
 
     this.showAllArticles = this.showAllArticles.bind(this);
+    this.showOneArticle = this.showOneArticle.bind(this);
   }
 
   /* async showArticleWithCategory(req, res) {
@@ -77,46 +79,44 @@ class ArticleController {
     });
   }
   // JE SUIS ICI
-  showOneArticle(Article, User, Comments) {
-    return async (req, res) => {
-      const article = await Article.findOne({
-        where: {
-          id: req.params.id
-        }
-      });
-      const userName = await User.findOne({
-        where: {
-          id: article.user_id
-        }
-      });
-      const comment = await Comments.findAll({
-        where: {
-          article_id: article.id
-        }
-      });
+  async showOneArticle(req, res) {
+    const article = await this.article.findOne({
+      where: {
+        id: req.params.id
+      }
+    });
+    const userName = await this.user.findOne({
+      where: {
+        id: article.user_id
+      }
+    });
+    const comment = await this.comment.findAll({
+      where: {
+        article_id: article.id
+      }
+    });
 
-      const userComment = await User.findAll({
-        attributes: ["id", "nickname"],
-        include: [
-          {
-            model: Comments,
-            attributes: ["id", "body"],
-            where: {
-              article_id: req.params.id
-            }
+    const userComment = await this.user.findAll({
+      attributes: ["id", "nickname"],
+      include: [
+        {
+          model: this.comment,
+          attributes: ["id", "body"],
+          where: {
+            article_id: req.params.id
           }
-        ]
-      });
+        }
+      ]
+    });
 
-      // res.send(userComment);
-      res.render("article", {
-        article,
-        nickname: userName.nickname,
-        user: req.user,
-        comment,
-        userComment
-      });
-    };
+    // res.send(userComment);
+    res.render("article", {
+      article,
+      nickname: userName.nickname,
+      user: req.user,
+      comment,
+      userComment
+    });
   }
 
   showOneArticleEdit(Article, Category, Article_has_category) {
