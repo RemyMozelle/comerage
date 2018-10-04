@@ -43,17 +43,20 @@
 
 <div class="row">
   <div class="col s12">
+    <em>Commentaires :</em>
     <ul class="collection">
+      {{#each userComment}}
+      {{#each comments}}
+      <span class="title">{{nickname}}</span>
       <li class="collection-item avatar">
-        <img src="images/yuna.jpg" alt="" class="circle">
-        <span class="title">Title</span>
-        <p>First Line <br>
-          Second Line
+        <img src="http://lorempicsum.com/futurama/100/100/{{id}}" alt="" class="circle">
+        <p>
+          {{body}}
         </p>
         <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
       </li>
+      {{/each}}
+      {{/each}}
     </ul>
   </div>
 </div>
-
-{{log comment}}

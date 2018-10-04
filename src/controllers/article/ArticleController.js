@@ -84,17 +84,32 @@ class ArticleController {
           id: article.user_id
         }
       });
-
       const comment = await Comments.findAll({
         where: {
           article_id: article.id
         }
       });
+
+      const userComment = await User.findAll({
+        attributes: ["id", "nickname"],
+        include: [
+          {
+            model: Comments,
+            attributes: ["id", "body"],
+            where: {
+              article_id: req.params.id
+            }
+          }
+        ]
+      });
+
+      // res.send(userComment);
       res.render("article", {
         article,
         nickname: userName.nickname,
         user: req.user,
-        comment
+        comment,
+        userComment
       });
     };
   }

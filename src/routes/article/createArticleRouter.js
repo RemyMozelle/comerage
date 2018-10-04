@@ -11,10 +11,10 @@ const createArticleRouter = (
   const articleRouter = Router();
   const articleController = new ArticleController();
   //routes
-  /* articleRouter.get(
+  articleRouter.get(
     "/articles",
     articleController.showArticleWithCategory(article, category)
-  ); */
+  );
   articleRouter.post(
     "/articles",
     articleController.createArticleWithCategory(
