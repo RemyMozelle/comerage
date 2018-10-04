@@ -1,9 +1,10 @@
 class UserController {
   constructor(user) {
     this.user = user;
+    //bind
     this.createAccount = this.createAccount.bind(this);
   }
-
+  // créer un bloggeur
   async createAccount(req, res) {
     try {
       await this.user.create(req.body);
