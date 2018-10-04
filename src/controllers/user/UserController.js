@@ -1,16 +1,19 @@
 class UserController {
-  createAccount(user) {
-    return async (req, res) => {
-      try {
-        await user.create(req.body);
-        res.redirect("/login");
-      } catch (err) {
-        let messages = err.errors.map(errs => errs);
-        res.render("signin", {
-          err: messages
-        });
-      }
-    };
+  constructor(user) {
+    this.user = user;
+    this.createAccount = this.createAccount.bind(this);
+  }
+
+  async createAccount(req, res) {
+    try {
+      await this.user.create(req.body);
+      res.redirect("/login");
+    } catch (err) {
+      let messages = err.errors.map(errs => errs);
+      res.render("signin", {
+        err: messages
+      });
+    }
   }
 }
 
