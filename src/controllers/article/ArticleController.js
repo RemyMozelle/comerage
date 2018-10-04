@@ -62,9 +62,11 @@ class ArticleController {
   // afficher tous les articles avec leurs catégories
   // filtre aussi tous les articles par catégories !
   async showAllArticles(req, res) {
+    console.log(req.query);
     if (Object.keys(req.query).length === 0) {
       const articles = await this.article.findAll({
         attributes: ["id", "body", "user_id"],
+        order: [["id", "DESC"]],
         where: {
           publish: 1
         },
@@ -89,6 +91,7 @@ class ArticleController {
     } else {
       const articles = await this.article.findAll({
         attributes: ["id", "body", "user_id"],
+        order: [["id", "DESC"]],
         where: {
           publish: 1
         },
