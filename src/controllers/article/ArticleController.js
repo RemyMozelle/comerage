@@ -1,12 +1,19 @@
 class ArticleController {
-  showArticleWithCategory(article, category) {
-    return async (req, res) => {
-      const categories = await category.findAll();
-      res.render("articles", {
-        categories
-      });
-    };
+  constructor(article, category, article_has_categories, comment) {
+    this.article = article;
+    this.category = category;
+    this.article_has_categories = article_has_categories;
+    this.comment = comment;
+
+    this.showAllArticles = this.showAllArticles.bind(this);
   }
+
+  /* async showArticleWithCategory(req, res) {
+    const categories = await this.categories.findAll();
+    res.render("articles", {
+      categories
+    });
+  } */
 
   createArticleWithCategory(Article, Article_has_category) {
     return async (req, res) => {
@@ -47,29 +54,27 @@ class ArticleController {
     };
   }
 
-  showAllArticles(Article, Category, Article_has_category) {
-    return async (req, res) => {
-      const articles = await Article.findAll({
-        attributes: ["id", "body", "user_id"],
-        where: {
-          publish: 1
-        },
-        include: [
-          {
-            model: Article_has_category,
-            include: [
-              {
-                model: Category
-              }
-            ]
-          }
-        ]
-      });
-      res.render("home", {
-        articles,
-        user: req.user
-      });
-    };
+  async showAllArticles(req, res) {
+    const articles = await this.article.findAll({
+      attributes: ["id", "body", "user_id"],
+      where: {
+        publish: 1
+      },
+      include: [
+        {
+          model: this.article_has_categories,
+          include: [
+            {
+              model: this.category
+            }
+          ]
+        }
+      ]
+    });
+    res.render("home", {
+      articles,
+      user: req.user
+    });
   }
   // JE SUIS ICI
   showOneArticle(Article, User, Comments) {
