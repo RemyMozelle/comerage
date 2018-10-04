@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ArticleController from "../../controllers/article/ArticleController";
 
-const createArticleRouter = (article, category, article_has_category) => {
+const createArticleRouter = (article, category, article_has_category, user) => {
   const articleRouter = Router();
   const articleController = new ArticleController();
   //routes
@@ -21,7 +21,10 @@ const createArticleRouter = (article, category, article_has_category) => {
     "/",
     articleController.showAllArticles(article, category, article_has_category)
   );
-  articleRouter.get("/articles/:id", articleController.showOneArticle(article));
+  articleRouter.get(
+    "/articles/:id",
+    articleController.showOneArticle(article, user)
+  );
   articleRouter.get(
     "/edit/articles/:id",
     articleController.showOneArticleEdit(

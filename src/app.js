@@ -76,7 +76,7 @@ app.use(passport.session());
 app.use(homeRouter);
 app.use(createAuthRouter(passport, user));
 app.use(createUserRouter(user));
-app.use(createArticleRouter(article, category, article_has_category));
+app.use(createArticleRouter(article, category, article_has_category, user));
 passport.use("local", createStrategy(Strategy, user));
 
 const hbs = exphbs.create({

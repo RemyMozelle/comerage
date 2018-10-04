@@ -71,11 +71,24 @@ class ArticleController {
       });
     };
   }
-
-  showOneArticle(Article) {
+  // JE SUIS ICI
+  showOneArticle(Article, User) {
     return async (req, res) => {
-      const article = await Article.findById(req.params.id);
-      res.render("article", { article });
+      const article = await Article.findOne({
+        where: {
+          id: req.params.id
+        }
+      });
+      const userName = await User.findOne({
+        where: {
+          id: article.user_id
+        }
+      });
+      res.render("article", {
+        article,
+        nickname: userName.nickname,
+        user: req.user
+      });
     };
   }
 
