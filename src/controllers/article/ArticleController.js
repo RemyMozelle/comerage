@@ -5,7 +5,7 @@ class ArticleController {
     this.user = user;
     this.comment = comment;
     this.article_has_categories = article_has_categories;
-
+    // bind
     this.showAllArticles = this.showAllArticles.bind(this);
     this.showOneArticle = this.showOneArticle.bind(this);
     this.showArticleWithCategory = this.showArticleWithCategory.bind(this);
@@ -144,7 +144,7 @@ class ArticleController {
       article_has_categories
     });
   }
-
+  // modifie l'article
   async editArticle(req, res) {
     const { body, categories, publish } = req.body;
 
@@ -215,7 +215,7 @@ class ArticleController {
       }
     }
   }
-
+  // supprime définitivement un article
   async deleteArticle(req, res) {
     const { id } = req.params;
 
