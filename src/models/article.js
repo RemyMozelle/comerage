@@ -2,7 +2,10 @@ const createArticleModel = (sequelize, DataTypes) =>
   sequelize.define("article", {
     body: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      }
     },
     publish: {
       type: DataTypes.BOOLEAN,

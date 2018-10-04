@@ -24,16 +24,15 @@ class ArticleController {
   }
   // créer un article avec les catégories
   async createArticleWithCategory(req, res) {
-    const { id } = req.user;
+    console.log("passe ici");
     const { body, categories, publish } = req.body;
-    console.log(req.body);
     // to do TRANSACTION SEQUELIZE
     if (publish) {
       const article = await this.article.create({
         body,
         publish: 1,
         created_at: new Date(),
-        user_id: id
+        user_id: req.user.id
       });
 
       for (let i = 0; i < categories.length; i++) {
@@ -43,12 +42,14 @@ class ArticleController {
         });
       }
       res.redirect("/");
+      //const category = await this.category.findAll();
+      res.redirect("/articles");
     } else {
       const article = await this.article.create({
         body,
         publish: 0,
         created_at: new Date(),
-        user_id: id
+        user_id: req.user.id
       });
       for (let i = 0; i < categories.length; i++) {
         await this.article_has_categories.create({
@@ -57,12 +58,12 @@ class ArticleController {
         });
       }
       res.redirect("/");
+      //const category = await this.category.findAll();
     }
   }
   // afficher tous les articles avec leurs catégories
   // filtre aussi tous les articles par catégories !
   async showAllArticles(req, res) {
-    console.log(req.query);
     if (Object.keys(req.query).length === 0) {
       const articles = await this.article.findAll({
         attributes: ["id", "body", "user_id"],
@@ -183,9 +184,13 @@ class ArticleController {
   // modifie l'article
   async editArticle(req, res) {
     const { body, categories, publish } = req.body;
-
     if (!categories) {
-      res.redirect(`/edit/articles/${req.params.id_article}`);
+      // res.redirect(`/edit/articles/${req.params.id_article}`);
+      const category = await this.category.findAll();
+      res.render(`editArticle`, {
+        err: "vous devez avoir au moins une catégories a ajouté",
+        categories: category
+      });
     }
 
     if (typeof req.user.id === undefined) {
