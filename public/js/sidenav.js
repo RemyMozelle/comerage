@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
   const elems = document.querySelectorAll(".sidenav");
-  const instances = M.Sidenav.init(elems);
+  const elem = document.querySelectorAll(".tabs");
+  M.Sidenav.init(elems);
+  M.Tabs.init(elem);
 });
